@@ -1,24 +1,13 @@
-//
-//  ContentView.swift
-//  Knight's Move
-//
-//  Created by Oleksandra Perevozniuk on 10/05/2025.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
+    @StateObject private var viewModel = GameViewModel(boardSize: 5)
 
-#Preview {
-    ContentView()
+
+    var body: some View {
+        ZStack {
+            Color(red: 222/255, green: 240/255, blue: 252/255).ignoresSafeArea()
+            BoardView(viewModel: viewModel)
+        }
+    }
 }
