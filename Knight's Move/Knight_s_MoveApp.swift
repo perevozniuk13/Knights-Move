@@ -4,7 +4,7 @@ import SwiftUI
 struct KnightsMoveApp: App {
     var body: some Scene {
             WindowGroup {
-                ContentView()
+                StartView()
             }
         }
 }

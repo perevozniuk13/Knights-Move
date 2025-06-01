@@ -17,7 +17,7 @@ struct BoardView: View {
     }
 
     var hasLost: Bool {
-        let current = viewModel.player.currentPosition
+        guard let current = viewModel.player.currentPosition else { return false }
         let validMoves = validKnightMoves(from: current)
         let totalVisited = viewModel.player.visited.count
         let totalCells = viewModel.boardSize * viewModel.boardSize
@@ -50,12 +50,8 @@ struct BoardView: View {
     }
 
     var body: some View {
-        VStack {
-            Text("Knight's Move Challenge")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding()
-
+        VStack(spacing: 0) {
+            Spacer().frame(height: 30)
             Picker("Board Size", selection: $viewModel.boardSize) {
                 ForEach([5, 6, 7, 8], id: \.self) { size in
                     Text("\(size)x\(size)").tag(size)
@@ -70,14 +66,14 @@ struct BoardView: View {
             
 
             Toggle("View Count", isOn: $showVisitNumbers)
-                .toggleStyle(SwitchToggleStyle(tint: Color.blue))
-                .padding()
+                .toggleStyle(SwitchToggleStyle(tint: Color(red: 30 / 255, green: 81 / 255, blue: 117 / 255)))
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
                 .background(Color.white)
                 .cornerRadius(10)
-                .padding(.horizontal) 
 
 
-            Spacer()
+            Spacer().frame(height: 10)
 
             VStack(spacing: 4) {
                 let boardRange = 0..<viewModel.boardSize
@@ -87,36 +83,44 @@ struct BoardView: View {
                             let pos = Position(row: row, col: col)
                             let isVisited = viewModel.isVisited(pos)
                             let isCurrent = pos == viewModel.player.currentPosition
+                            let isLosing = hasLost && pos == viewModel.player.currentPosition
+                            let isWinning = hasWon && pos == viewModel.player.currentPosition
                             let visitNumber = showVisitNumbers ? viewModel.visitNumber(for: pos) : nil
 
                             CellView(
                                 position: pos,
                                 isCurrent: isCurrent,
                                 isVisited: isVisited,
+                                isLosing: isLosing,
+                                isWinning: isWinning,
                                 visitNumber: visitNumber
                             )
                             .onTapGesture {
-                                if viewModel.isValidKnightMove(from: viewModel.player.currentPosition, to: pos)
-                                    && !isVisited {
+                                if viewModel.player.currentPosition == nil {
+                                    viewModel.startGame(at: pos)
+                                } else if viewModel.isValidKnightMove(from: viewModel.player.currentPosition!, to: pos)
+                                            && !isVisited {
                                     viewModel.movePlayer(to: pos)
                                 }
                             }
-                            .background(Color(red: 117/255, green: 162/255, blue: 191/255))
-                            .cornerRadius(4)
                             .frame(width: cellSize, height: cellSize)
                         }
                     }
                 }
             }
-            .padding()
+            .padding(5)
             .background(Color.white)
             .cornerRadius(12)
 
+            Spacer().frame(height: 10)
+            GameOverView(hasWon: hasWon, hasLost: hasLost)
+            Spacer().frame(height: 10)
+            Button("Reset Board", action: viewModel.resetGame)
+                .padding()
+                .background(Color(red: 30 / 255, green: 81 / 255, blue: 117 / 255))
+                .foregroundColor(.white)
+                .cornerRadius(10)
             Spacer()
-
-            GameOverView(hasWon: hasWon, hasLost: hasLost) {
-                viewModel.resetGame()
-            }
         }
         .padding()
     }

@@ -1,13 +1,33 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var viewModel = GameViewModel(boardSize: 5)
+    let boardSize: Int
+    @StateObject private var viewModel: GameViewModel
 
+    init(boardSize: Int) {
+        self.boardSize = boardSize
+        _viewModel = StateObject(wrappedValue: GameViewModel(boardSize: boardSize))
+    }
 
     var body: some View {
-        ZStack {
-            Color(red: 222/255, green: 240/255, blue: 252/255).ignoresSafeArea()
-            BoardView(viewModel: viewModel)
+        GeometryReader { geometry in
+            ZStack {
+                Image("bg2")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: geometry.size.width, height: geometry.size.height + 150)
+                    .clipped()
+                    .ignoresSafeArea()
+
+                VStack(spacing: 0) {
+                    Spacer().frame(height: geometry.size.height * 0.15)
+
+                    HStack {
+                        BoardView(viewModel: viewModel)
+                    }
+                }
+                .frame(width: geometry.size.width)
+            }
         }
     }
 }

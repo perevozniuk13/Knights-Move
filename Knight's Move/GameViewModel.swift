@@ -6,7 +6,7 @@ struct Position: Hashable {
 }
 
 struct Player {
-    var currentPosition: Position
+    var currentPosition: Position? = nil
     var visited: Set<Position> = []
     var visitOrder: [Position: Int] = [:]
 }
@@ -17,21 +17,27 @@ class GameViewModel: ObservableObject {
 
     init(boardSize: Int = 5) {
         self.boardSize = boardSize
-        let start = Position(row: 0, col: 0)
-        self.player = Player(currentPosition: start, visited: [start], visitOrder: [start: 1])
+        self.player = Player()
+    }
+
+    func startGame(at position: Position) {
+        player.currentPosition = position
+        player.visited.insert(position)
+        player.visitOrder[position] = 1
     }
 
     func movePlayer(to newPos: Position) {
         guard !player.visited.contains(newPos) else { return }
-        
+        guard let current = player.currentPosition else { return }
+        guard isValidKnightMove(from: current, to: newPos) else { return }
+
         player.currentPosition = newPos
         player.visited.insert(newPos)
         player.visitOrder[newPos] = player.visitOrder.count + 1
     }
 
     func resetGame() {
-        let start = Position(row: 0, col: 0)
-        self.player = Player(currentPosition: start, visited: [start], visitOrder: [start: 1])
+        self.player = Player()
     }
 
     func isValidKnightMove(from: Position, to: Position) -> Bool {
@@ -48,4 +54,3 @@ class GameViewModel: ObservableObject {
         return player.visitOrder[pos]
     }
 }
-

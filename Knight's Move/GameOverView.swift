@@ -3,36 +3,19 @@ import SwiftUI
 struct GameOverView: View {
     var hasWon: Bool
     var hasLost: Bool
-    var resetAction: () -> Void
 
     var body: some View {
         ZStack {
             if hasWon {
-                VStack(spacing: 12) {
-                    Text("Challenge completed 🎉")
-                        .font(.title)
-                        .foregroundColor(Color.green)
-                    Spacer()
-                    Button("Reset Board", action: resetAction)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
+                Text("Challenge completed 🎉")
+                    .font(.title)
+                    .foregroundColor(Color(red: 6 / 255, green: 145 / 255, blue: 45 / 255))
             } else if hasLost {
-                VStack(spacing: 12) {
-                    Text("Challenge failed 💀")
-                        .font(.title)
-                        .foregroundColor(.red)
-                    Spacer()
-                    Button("Try Again", action: resetAction)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
+                Text("Challenge failed 💀")
+                    .font(.title)
+                    .foregroundColor(Color(red: 199 / 255, green: 38 / 255, blue: 10 / 255))
+                
             }
         }
-        .frame(height: 120)
     }
 }
