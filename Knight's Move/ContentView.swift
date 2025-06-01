@@ -15,8 +15,7 @@ struct ContentView: View {
                 Image("bg2")
                     .resizable()
                     .scaledToFill()
-                    .frame(width: geometry.size.width, height: geometry.size.height + 150)
-                    .clipped()
+                    .frame(width: geometry.size.width, height: geometry.size.height + (geometry.size.width > 500 ? 100 : 0))
                     .ignoresSafeArea()
 
                 VStack(spacing: 0) {

@@ -41,17 +41,19 @@ struct BoardView: View {
 
     var cellSize: CGFloat {
         let screenWidth = UIScreen.main.bounds.width
-        let availableWidth = screenWidth - (CGFloat(viewModel.boardSize - 1)) - totalPadding()
-        return availableWidth / CGFloat(viewModel.boardSize)
-    }
+        let boardSize = CGFloat(viewModel.boardSize)
 
-    private func totalPadding() -> CGFloat {
-        return 40
+        let isTablet = screenWidth > 500
+        let padding = isTablet ? 200 : 40
+        let spacing = boardSize - 1
+
+        let availableWidth = screenWidth - (spacing * 4) - CGFloat(padding)
+        return availableWidth / boardSize
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            Spacer().frame(height: 30)
+            Spacer().frame(height: UIScreen.main.bounds.width > 500 ? 10 : 30)
             Picker("Board Size", selection: $viewModel.boardSize) {
                 ForEach([5, 6, 7, 8], id: \.self) { size in
                     Text("\(size)x\(size)").tag(size)
@@ -59,7 +61,7 @@ struct BoardView: View {
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding()
-            .frame(width: 200)
+            .frame(width: UIScreen.main.bounds.width > 500 ? 300 : 200)
             .onChange(of: viewModel.boardSize) {
                 viewModel.resetGame()
             }
@@ -71,6 +73,7 @@ struct BoardView: View {
                 .padding(.vertical, 8)
                 .background(Color.white)
                 .cornerRadius(10)
+                .frame(width: 300)
 
 
             Spacer().frame(height: 10)

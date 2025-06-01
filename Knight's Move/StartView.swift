@@ -24,7 +24,7 @@ struct StartView: View {
                             .multilineTextAlignment(.center)
                         
                         Text("Choose your board size to begin the challenge!")
-                            .font(.system(size: 16, weight: .medium, design: .monospaced))
+                            .font(.system(size: 18, weight: .medium, design: .monospaced))
                             .foregroundColor(.white)
                             .padding(.horizontal, 30)
                             .multilineTextAlignment(.center)
